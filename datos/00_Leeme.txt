@@ -1,0 +1,6 @@
+
+// enviar comandos sql directamente a la consola
+// sqlite
+
+cat crearTablas.sql | sqlite3  Zonas.bd 
+

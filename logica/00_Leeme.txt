@@ -1,0 +1,6 @@
+
+// instalar dependencias
+npm install
+
+// pasar los test
+npm test
