@@ -1,0 +1,6 @@
+
+// en un terminal:
+node mainServidorREST.js
+
+// en otro, para pasar los test:
+npm run test
