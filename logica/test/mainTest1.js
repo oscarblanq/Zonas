@@ -233,8 +233,6 @@ describe( "Test 1 (probar a añadir zonas)", () => {
 			// compruebo que devuelve un resultado
 			assert.ok(res) ;
 
-			console.log(res)
-
 			// compruebo que ese resultado que devuelve es el mensaje de error
 			assert.equal( res, "Oups, no hay zonas con ese nombre." ) ;
 

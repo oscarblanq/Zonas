@@ -12,9 +12,10 @@
 
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
-var sqlite3 = require( "sqlite3" )
+var sqlite3 = require( "sqlite3" ) ;
+var fs = require( "fs" ) ;
 
-var fs = require( "fs" )
+var moment = require( "moment" ) ;
 
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
@@ -52,24 +53,23 @@ class ConexionBD {
 		//
 		var that = this
 
-		this.laConexion = new sqlite3.Database(
-			this.nombreBaseDeDatos,
-			function( err ) {
+		this.laConexion = new sqlite3.Database( this.nombreBaseDeDatos, ( err ) => {
+
 				if ( err ) {
-					var mensaje = " ConexionBD: error al abrir " 
-						+ that.nombreBaseDeDatos 
-						+ " error= "
-						+ err 
+
+					var mensaje = `ConexionBD: error al abrir ${that.nombreBaseDeDatos}. ${err}` ;
 
 					console.error( mensaje )
-					that.laConexion = null
-					callback( mensaje )
-					return
+
+					that.laConexion = null ;
+
+					callback( mensaje ) ;
+
+					return;
 				} // if
 
 				// else : no error
-				console.log( " ConexionBD: conexion abierta con '" 
-							 + that.nombreBaseDeDatos + "' hora=" + Date.now() )
+				console.log(`ConexionBD: conexion abierta con "${that.nombreBaseDeDatos}". Hora: ${moment().format('HH:mm:ss')}`) ;
 							 
 				callback( null ) // no hay error
 			} // funtion( err )

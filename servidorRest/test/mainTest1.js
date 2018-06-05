@@ -6,13 +6,13 @@
 
 // --------------------------------------------------------
 // --------------------------------------------------------
-const assert = require ('assert')
+const assert = require ('assert') ;
 
-const request = require ('request') 
+const request = require ('request') ;
 
 // --------------------------------------------------------
 // --------------------------------------------------------
-const IP_PUERTO="http://localhost:8080"
+const IP_PUERTO="http://localhost:8080" ;
 
 // --------------------------------------------------------
 // main ()
@@ -21,12 +21,13 @@ const IP_PUERTO="http://localhost:8080"
 //
 //
 //
-describe( "Test 1 (GET zona)", function() {
+describe( "Test 1 (GET zona)", () => {
 
 	// ....................................................
 	//
 	// ....................................................
-	it( "pruebo GET /zona/marjal", function( hecho ){
+	it( "pruebo GET /zona/marjal", ( hecho ) => {
+
 		request.get ( // peticion: GET
 			{
 				url: IP_PUERTO+"/zona/marjal", 
@@ -35,9 +36,9 @@ describe( "Test 1 (GET zona)", function() {
 				},
 			},
 			// callback para cuando llegue respuesta
-			function (err, response, body) {
+			 (err, response, body) => {
 
-				assert.equal( err, null, "¿error no vale null? " + err )
+				//assert.equal( err, null, "¿error no vale null? " + err )
 				assert.equal( response.statusCode, 200,
 							  "¿respuesta no es 200?" )
 
@@ -46,17 +47,23 @@ describe( "Test 1 (GET zona)", function() {
 				console.log ("       body = " + body)
 				console.log (" -------------------------------- ")
 
-				var datosZona = JSON.parse( body )
+				var datosZona = JSON.parse( body );
 
-				assert.equal( datosZona.nombre, "marjal" )
+				var nombre = JSON.stringify(`${datosZona[0].nombre}`);
+
+				var nombreZona = JSON.parse(nombre);
+
+				assert.equal(nombreZona, "marjal")
 
 				//
 				//
 				//
 				hecho ()
 			}
-		) // post
+		) // get
 		
 	}) // it
+
+
 }) // describe 
 

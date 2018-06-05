@@ -8,19 +8,19 @@
 // requires
 // .......................................................
 
-const express = require( 'express' ) 
+const express = require( 'express' ) ;
 
-const bodyParser = require( 'body-parser' )
+const bodyParser = require( 'body-parser' ) ;
 
-const assert = require( 'assert' ) 
+const assert = require( 'assert' ) ;
 
-const Logica = require( "../logica/Logica.js" )
+const Logica = require( "../logica/Logica.js" ) ;
 
 
 // .......................................................
 // creación del servidor 
 // .......................................................
-var servidorExpress = express()
+var servidorExpress = express() ;
 
 // .......................................................
 // servidorExpress.use ( _ ) pone un "hook"
@@ -33,18 +33,21 @@ var servidorExpress = express()
 // servidorExpress.use ( bodyParser.json() )
 // .......................................................
 // si siempre va a ser json mejor este body parser
-servidorExpress.use ( bodyParser.text({ type: 'text/json'}) )
+servidorExpress.use ( bodyParser.text({ type: 'text/json'}) ) ;
 
 // si no estamos seguros, mejor este
 // servidorExpress.use ( bodyParser.text({ type: 'text/plain'}) )
+
+// ··· PUERTO HTTP ···
+const PUERTO = process.env.PORT || 8080 ;
 
 // .......................................................
 // esto es para capturar control-c
 // y cerrar el servicio ordenadamente
 // .......................................................
-process.on('SIGINT', function() {
-	console.log (" terminando ")
-	servidorExpress.close ()
+process.on('SIGINT', () =>{
+	console.log (" Apagando servidor... ")
+	servidorExpress.close ;
 })
 
 // ------------------------------------------------------
@@ -57,25 +60,26 @@ process.on('SIGINT', function() {
 // abro conexion a logica, cargo las reglas
 // y luego arranco servidor
 // 
-laLogica = new Logica(
-    "../datos/Zonas.bd",
-    function( err ) {
-        assert.ok( ! err, " conexión a BD fallada: " + err)
+laLogica = new Logica("../datos/Zonas.bd", ( err ) => {
+
+        assert.ok( ! err, `Conexión a BD fallada: ${err}`) ;
 
 		// 
 		// cargo las reglas REST
 		// 
-		var reglas = require( './ReglasREST.js' ) 
+		var reglas = require( './ReglasREST.js' ) ;
 
-		reglas.cargar( servidorExpress, laLogica )
+		reglas.cargar( servidorExpress, laLogica ) ;
 
 		// 
 		// arranco el servidor 
 		// 
-		console.log ("todo preparado, espero en 8080 (http)")
-		servidorExpress.listen (8080)
+		servidorExpress.listen (PUERTO , () => {			
+			console.log(`Servidor Express arrancado en http://localhost:${PUERTO}`) ;
+		});
+
 		
-    }) 
+    }); // laLogica
 
 // ------------------------------------------------------
 // ------------------------------------------------------
