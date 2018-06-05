@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Iniciar sesión</title>
+
+	<!-- ******************* POR DEFECTO ANCHO = ANCHO DISPOSITIVO, SIN ZOOM -->
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- ******************* COMPATIBILIDAD CON Internet Explorer/EDGE -->
+	
+	<meta http-equiv="x-ua-compatible" content="ie-edge">
+
+	<!-- **************************** BOOTSTRAP ***********************-->
+	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    
+    <!-- *************************** FONT AWESOME **********************-->
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    
+    
+</head>
+
+<body>
+
+
+		<div class="card" style="position: absolute; top: 50%; left: 50%; width: 490px; height: 350px; margin-left: -245px; margin-top: -175px;">
+			<div class="card-header">
+				<h2 id="header"><i class="fa fa-lock"></i> Iniciar sesión</h2>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-2">&nbsp;</div>
+					<!-- Mensajes -->
+					<div class="alert alert-info collapse col-md-8" role="alert" id="loginAlert"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<div class="input-group mb-3">
+							<label class="sr-only" for="email">Dirección de e-mail</label>
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0" id="container-email">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-at"></i></div>
+								</div>
+								<input name="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" autofocus="" type="email">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<div class="input-group mb-3" id="container-password">
+							<label class="sr-only" for="password">Contraseña</label>
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-key"></i></div>
+								</div>
+								<input name="password" class="form-control" id="password" placeholder="Contraseña" required="" type="password">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8" style="padding-top: .35rem" id="container-recordarme">
+						<div class="form-check mb-2 mr-sm-2 mb-sm-0">
+							<label class="form-check-label">
+                            <input class="form-check-input" name="remember" type="checkbox">
+                            <span style="padding-bottom: .15rem">Recordarme</span>
+                        </label>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="padding-top: 1rem">
+					<div class="col-md-2"></div>
+					<div class="col-md-8" id="container-login">
+						<button class="btn btn-success" id="login"><i class="fa fa-sign-in"></i> Entrar</button>
+						<button type="button" class="btn btn-link" onclick="passwordOlvidada()" id="boton-olvidar">Olvidé mi contraseña</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<footer style="position:absolute;bottom:0.5rem;right:1rem;">Plataforma desarrollada por Óscar Blánquez 2018 © Todos los derechos reservados.</footer>
+
+	<script>
+		
+		function passwordOlvidada(){
+			
+			var header = document.getElementById("header");
+			header.innerHTML = `<h2 id="header"><i class="fa fa-envelope"></i> Recuperar contraseña</h2>` ;
+
+			var email = document.getElementById("container-email");
+			email.style.display="none";
+			
+			var password = document.getElementById("container-password");
+			password.innerHTML = `
+
+						<p id="descripcion">Introduce el correo electrónico con el que te registraste</p>
+
+						<div class="input-group mb-2 mr-sm-2 mb-sm-0" id="container-emailRecuperar">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-at"></i></div>
+								</div>
+								<input name="email" class="form-control" id="emailRecuperar" placeholder="nombre@ejemplo.com" required="" autofocus="" type="email">
+							</div>`
+			
+			var recordarme = document.getElementById("container-recordarme");
+			recordarme.style.display="none";
+			
+			var olvidarMiPassword = document.getElementById("boton-olvidar");
+			olvidarMiPassword.style.display="none";
+			
+			var login = document.getElementById("login");
+			login.style.display="none";
+			
+			var containerLogin = document.getElementById("container-login");
+			containerLogin.innerHTML = `<button class="btn btn-success" onclick="introducirCodigo()"><i class="fa fa-angle-double-right"></i> Enviar</button>
+			<button type="button" class="btn btn-link" onclick="location.reload()" style="margin-left: 8rem;">Atrás</button>`
+			
+		}
+		
+		function introducirCodigo(){
+			var header = document.getElementById("header");
+			header.innerHTML = `<h2 id="header"><i class="fab fa-slack-hash"></i> Código de verificación</h2>` ;
+			
+			var descripcion = document.getElementById("descripcion");
+			descripcion.innerHTML = `<p>Introduce el código que te ha llegado al correo</p>`
+			
+			var codigo = document.getElementById("container-emailRecuperar");
+			
+			codigo.innerHTML = `<div class="input-group mb-2 mr-sm-2 mb-sm-0" id="container-codigo">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-hashtag"></i></div>
+								</div>
+								<input name="codigo" class="form-control" id="codigo" placeholder="*****" required="" autofocus="" type="text" maxlength="5">
+							</div>`
+			
+			var containerLogin = document.getElementById("container-login");
+			containerLogin.innerHTML = `<button class="btn btn-success" onclick="cambiarPassword()"><i class="fa fa-angle-double-right"></i> Enviar</button> `
+		}
+		
+		function cambiarPassword(){
+			var header = document.getElementById("header");
+			header.innerHTML = `<h2 id="header"><i class="fa fa-key"></i> Cambiar contraseña</h2>` ;
+			
+			var descripcion = document.getElementById("descripcion");
+			descripcion.innerHTML = `<p>Introduce una contraseña para tu cuenta</p>`
+			
+			var password = document.getElementById("container-codigo");
+			
+			password.innerHTML = `<div class="input-group mb-2 mr-sm-2 mb-sm-0" id="container-newPassword">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-lock"></i></div>
+								</div>
+								<input name="newPassword1" class="form-control" id="newPassword1" type="password">
+							</div>
+
+								<div class="input-group mb-2 mr-sm-2 mb-sm-0" id="container-newPassword2" style="margin-top: 1rem">
+								<div class="input-group-prepend">
+									<div class="input-group-text" style="width: 48px"><i class="fa fa-lock"></i></div>
+								</div>
+								<input name="newPassword2" class="form-control" id="newPassword2" type="password">
+							</div> `
+			
+			var containerLogin = document.getElementById("container-login");
+			containerLogin.innerHTML = `<button class="btn btn-success" onclick="mensajePasswordCambiada()" id="botonEnviar"><i class="fa fa-angle-double-right"></i> Enviar</button> `
+		}
+		
+		function mensajePasswordCambiada(){
+			
+			var header = document.getElementById("header");
+			header.innerHTML = `<h2 id="header"><i class="fa fa-check"></i> Contraseña cambiada correctamente</h2>`
+			
+			var descripcion = document.getElementById("descripcion");
+			descripcion.innerHTML = `<i class="far fa-check-circle" style="font-size: 3rem; color: green;"></i><p>Se ha actualizado tu contraseña en la base de datos.</p>`
+			
+			var containerNewPassword = document.getElementById("container-newPassword");
+			
+			containerNewPassword.innerHTML = '';
+			
+			var containerNewPassword2 = document.getElementById("container-newPassword2");
+			
+			containerNewPassword2.innerHTML = '';
+			
+			var botonEnviar = document.getElementById("botonEnviar");
+			botonEnviar.style.display="none";
+
+			var containerLogin = document.getElementById("container-login");
+
+			containerLogin.innerHTML = `<button type="button" class="btn btn-link" onclick="location.reload()" style="margin-left: 8rem; margin-top: -2rem;">Inicio</button>`
+			
+		}
+	
+	</script>
+</body>
+</html>
