@@ -39,16 +39,11 @@ class Logica {
 	// void / Error // via callback( err )
 	//
 	// .................................................................
-	nuevaZona ( datosZona, callback ) {
+	nuevaZona ( nombreZona, descripcion, callback ) {
 
-		var textoSQL = 'insert into Zona values ( $nombre, $descripcion );' ;
-
-		var datos = {
-			$nombre: datosZona.nombre,
-			$descripcion: datosZona.descripcion
-		} ;
+		var textoSQL = `INSERT INTO zonas (nombre_zona, descripcion) values ( "${nombreZona}" , "${descripcion}" );` ;
 		
-		this.laConexion.modificarConPrepared( textoSQL, datos, callback ) ;
+		this.laConexion.modificarConPrepared( textoSQL, callback ) ;
 											  
 	} // nuevaZona()
 
@@ -89,17 +84,11 @@ class Logica {
 	// void / Error // via callback( err )
 	//
 	// .................................................................
-	nuevoVerticeParaZona ( nombreZona, vertice, callback ) {
+	nuevoVerticeParaZona ( nombreZona, longitud, latitud, callback ) {
 
-		var textoSQL = 'insert into Vertice values ( $nombre, $longitud, $latitud );' ;
-
-		var datos = {
-			$nombre: nombreZona,
-			$longitud: vertice.longitud,
-			$latitud: vertice.latitud
-		};
+		var textoSQL = `INSERT INTO vertices (nombre_zona, longitud, latitud) VALUES ("${nombreZona}", "${longitud}", "${latitud}");` ;
 		
-		this.laConexion.modificarConPrepared( textoSQL, datos, callback ) ;
+		this.laConexion.modificar( textoSQL, callback ) ;
 											  
 	} // ()
 
@@ -115,7 +104,7 @@ class Logica {
 	getZona ( nombreZona, callback ) {
 
 		//consulta a la base de datos
-		var textoSQL = `select * from Zona where nombre = "${nombreZona}";` ;
+		var textoSQL = `select * from zonas where nombre_zona = "${nombreZona}";` ;
 		
 		this.laConexion.consultar ( textoSQL, ( err, res ) => {
 
@@ -164,7 +153,7 @@ class Logica {
 	getVertices ( nombreZona, callback ) { 
 
 		//consulta a la base de datos
-		var textoSQL = `select * from Vertice where nombreZona = "${nombreZona}";` ;
+		var textoSQL = `select longitud, latitud from vertices where nombre_zona = "${nombreZona}";` ;
 		
 		this.laConexion.consultar ( textoSQL, ( err, res ) => {
 
@@ -186,9 +175,9 @@ class Logica {
 
 			var vertices = [] ; // creamos el array "vertices"
 
-			vertices.push ( res[0].longitud ) ;	
+			vertices.push ( res[0] ) ;	
 
-			vertices.push ( res[0].latitud ) ;
+			vertices.push ( res[1] ) ;
 
 			callback ( null, vertices ) ;
 
@@ -209,7 +198,7 @@ class Logica {
 	getDescripcionDeZona ( nombreZona, callback ) { 
 
 		//consulta a la base de datos
-		var textoSQL = `select * from Zona where nombre = "${nombreZona}";` ;
+		var textoSQL = `select * from zonas where nombre_zona = "${nombreZona}";` ;
 		
 		this.laConexion.consultar ( textoSQL, ( err, res ) => {
 
@@ -244,6 +233,89 @@ class Logica {
 		}) ; // finalizada la consulta
 
 	} // getDescripcionDeZona()
+
+	// .......................................................
+//
+// user: Texto
+// password: Texto
+// -->
+//    f()
+// -->
+// Verdadero / Falso
+// JSON datos de usuario {email, rol, nombre, apellidos}
+//
+// via callback( error, resultados )
+//
+// ..................................................
+// Esta función es llamada por la regla GET /login
+// .......................................................
+	comprobarLoginEnBD (user, password, callback) {
+
+	// Comprobar login no es inmediato sino 
+	// asíncrono ( por eso ahora lo simulo ).
+	// En realidad aquío se debe consultar en
+	// una BD el nombre del usuario y
+	// su password (secreto compartido)
+	// 
+	// user == email de usuario (utilizado como id/clave)
+	// user no es el nombre de pila del usuario
+		//setTimeout ( () => {
+			
+			var textoSQL = `SELECT * from clientes where email="${user}";` ;
+
+			this.laConexion.consultar ( textoSQL, ( err, res ) => {
+
+				//mirar si hay error
+				// y no sigo
+				if( err ){
+					callback(err, null) ;
+					return;
+				}
+
+				if(res.length == 0){
+					callback( "La combinación usuario/contraseña no es correcta", null) ;
+					return;
+				}
+
+				res.forEach( (row) => {
+
+					var emailBD = row.EMAIL ;
+					var passwordBD = row.PASSWORD ;
+					var nombre = row.NOMBRE ;
+					var apellido = row.APELLIDO ;
+					var rol = row.ROL ;
+
+					if(  password != passwordBD || user == null || password == null ){
+						callback( "La combinación usuario/contraseña no es correcta", null) ;
+						return;
+					}
+
+					if ( user==emailBD & password == passwordBD ) {
+						// devuelvo que no hay error y
+						// unos datos del usuario
+		
+							callback (null,
+								{
+										 user: user,
+										 nombre: nombre,
+										 apellido: apellido,
+										 rol: rol,
+								}
+								
+							); 
+					}
+					
+				} ) ;				
+				
+				
+				},
+	
+				100) ;
+
+			//}) //setTimeout()
+
+
+	} // comprobarLoginEnBD()
 
 } // class
 

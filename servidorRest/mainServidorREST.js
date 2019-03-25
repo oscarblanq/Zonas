@@ -59,7 +59,7 @@ process.on('SIGINT', () =>{
 // abro conexion a logica, cargo las reglas
 // y luego arranco servidor
 // 
-laLogica = new Logica("../datos/Zonas.bd", ( err ) => {
+laLogica = new Logica("../datos/database.db", ( err ) => {
 
         assert.ok( ! err, `Conexión a BD fallada: ${err}`) ;
 
@@ -133,74 +133,6 @@ function peticionEsGetLogin (req) {
 } // ()
 
 // .......................................................
-//
-// req: PeticionHTTP
-// -->
-//    f()
-// -->
-// V/F
-//
-// .......................................................
-function peticionTienePermisos( req ) {
-
-	console.log (" * comprobando permisos ") ;
-
-	// 
-	// sacamos el token opaco de la sesion (viaja como cookie)
-	// 
-	var laSesion = req.session ;
-
-	// console.log ("\t sesion=" + JSON.stringify(laSesion) )
-	console.log ("\t token opaco que viaja como cookie=" + laSesion.elTokenOpaco ) ;
-
-	//
-	// el token opaco debería haber sido encriptado
-	// aquí se desencriptaría antes del parse
-	//
-	try {
-
-		var elToken = JSON.parse( laSesion.elTokenOpaco ) ;
-
-	} catch ( err ) {
-
-		console.log(" * el token no parece auténtico: :-( Permiso no concedido") ;
-
-		return false;
-
-	}
-
-	//
-	// Como es una prueba, ahora, compruebo algo simple
-	//
-	if ( elToken.autor != "jordi" )  {
-
-		console.log(" * el token no parece auténtico: :-( Permiso no concedido");
-
-		return false;
-	}
-	
-	console.log (" el token parece bueno: permisos OK") ;
-	return true;
-
-	/*
-	  La comprobación con el token opaco sería: 
-	  el programa cliente sabe el nombre de usuario 'juan' p.ej y el secreto compartido
-	  secreto compartido <- 1234('juan') // 1234 solo lo sabe el ser humano
-	  y no lo guarda ninguna máquina
-	  secreto compartido también están en la base de datos como password de juan
-	  (por eso es compartido)
-	  El secrto cmpartido se pone en el token opaco (es opaco porque va codificado
-	  con una clave conocida sólo aquí), también se pone el nombre del usuario.
-
-	  Para probar su identidad, el programa cliente envia el token opaco 
-	  y el nombre del usuario codificado con el secreto compartido
-
-	  Aquí, abriríamos el token opaco para sacar el secreto comnpartido
-	  y con el decodificar la prueba que debe dar el nombre del usuario
-	 */
-} // ()
-
-// .......................................................
 // servidorExpress.use ( _ ) pone un "hook"
 // 
 // Este hook hace que en la respuesta
@@ -220,17 +152,26 @@ function peticionTienePermisos( req ) {
 //
 // Igualmente, Allow-Credentials para que el navegador
 // guarde y re-envie los cookies de forma automática
-// ya que el código javascript de la págna html tiene
+// ya que el código javascript de la página html tiene
 // prohibido el acceso a las cookies
 //
 // .......................................................
+
 servidorExpress.use ( (req, res, next) => {
 
-	res.setHeader ('Access-Control-Allow-Origin', "http://localhost:8080") ;
+	//res.setHeader ('Access-Control-Allow-Origin', "http://localhost:8080") ;
+
+	
+
+	
+	//res.setHeader ('Access-Control-Allow-Origin', `http://localhost:${PUERTO}`) ;
+
+	res.setHeader ('Access-Control-Allow-Origin', '*') ;
+
 
 	res.setHeader ('Access-Control-Allow-Credentials', "true" ) ;
 
-	// res.setHeader ('Access-Control-Allow-Methods', "put" ) 
+	//res.setHeader ('Access-Control-Allow-Methods', "put" ) 
 
 	next () ;
 
@@ -280,7 +221,7 @@ servidorExpress.use ( (req, res, next) => {
 	// 
 	// Como no es login voy a mirar si tiene permisos.
 	// Lo hace la función de utilidad inspeccionando
-	// el token opaco que viaja como cookie en la peición.
+	// el token opaco que viaja como cookie en la petición.
 	// Una ventaja de esto es que la comprobración es síncrona
 	// porque lo que hay que mirar (el token opaco en la cookie)
 	// ya lo tenemos (y no hace falta hacer consultar en la BD, pj.)
@@ -291,7 +232,7 @@ servidorExpress.use ( (req, res, next) => {
 
 		res.writeHead(401) ; // unauthorized
 
-		res.end;
+		res.end();
 
 		return; // acabo sin llamar a next()
 	}
@@ -301,10 +242,68 @@ servidorExpress.use ( (req, res, next) => {
 	// 
 	console.log (" * sí que tiene permisos ") ;
 
-    next(); // la petición contiúa
+    next(); // la petición continúa
 })
 
 // ------------------------------------------------------
 // ------------------------------------------------------
 // ------------------------------------------------------
 // ------------------------------------------------------
+function peticionTienePermisos( req ) {
+
+	console.log (" * comprobando permisos ") ;
+
+	// 
+	// sacamos el token opaco de la sesion (viaja como cookie)
+	// 
+	var laSesion = req.session ;
+
+	// console.log ("\t sesion=" + JSON.stringify(laSesion) )
+	console.log (`\t token opaco que viaja como cookie =  ${laSesion.elTokenOpaco} ` ) ;
+
+	//
+	// el token opaco debería haber sido encriptado
+	// aquí se desencriptaría antes del parse
+	//
+	try {
+
+		var elToken = JSON.parse( laSesion.elTokenOpaco ) ;
+
+	} catch ( err ) {
+
+		console.log(" * el token no parece auténtico: :-( Permiso no concedido") ;
+
+		return false;
+
+	}
+
+	//
+	// Como es una prueba, ahora, compruebo algo simple
+	//
+	if ( elToken.autor != "jordi" )  {
+
+		console.log(" * el token no parece auténtico: :-( Permiso no concedido");
+
+		return false;
+	} 
+	
+	console.log (" el token parece bueno: permisos OK") ;
+	return true;
+
+	/*
+	  La comprobación con el token opaco sería: 
+	  el programa cliente sabe el nombre de usuario 'juan' p.ej y el secreto compartido
+	  secreto compartido <- 1234('juan') // 1234 solo lo sabe el ser humano
+	  y no lo guarda ninguna máquina
+	  secreto compartido también están en la base de datos como password de juan
+	  (por eso es compartido)
+	  El secrto compartido se pone en el token opaco (es opaco porque va codificado
+	  con una clave conocida sólo aquí), también se pone el nombre del usuario.
+
+	  Para probar su identidad, el programa cliente envia el token opaco 
+	  y el nombre del usuario codificado con el secreto compartido
+
+	  Aquí, abriríamos el token opaco para sacar el secreto comnpartido
+	  y con el decodificar la prueba que debe dar el nombre del usuario
+	 */
+} // peticionTienePermisos() 

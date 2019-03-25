@@ -22,15 +22,18 @@
     
     <!-- *************************** FONT AWESOME **********************-->
     
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-    
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	
+	<!--  *****************************  API  ***************************-->
+	<script src="./API.js"></script>
     
 </head>
 
 <body>
+<div id="titulo"></div>
 
 
-		<div class="card" style="position: absolute; top: 50%; left: 50%; width: 490px; height: 350px; margin-left: -245px; margin-top: -175px;">
+		<div class="card" style="position: absolute; top: 50%; left: 50%; width: 490px; height: 350px; margin-left: -245px; margin-top: -175px;" id="card">
 			<div class="card-header">
 				<h2 id="header"><i class="fa fa-lock"></i> Iniciar sesión</h2>
 			</div>
@@ -38,6 +41,7 @@
 				<div class="row">
 					<div class="col-md-2">&nbsp;</div>
 					<!-- Mensajes -->
+					<div class="error"></div>
 					<div class="alert alert-info collapse col-md-8" role="alert" id="loginAlert"></div>
 				</div>
 				<div class="row">
@@ -49,7 +53,7 @@
 								<div class="input-group-prepend">
 									<div class="input-group-text" style="width: 48px"><i class="fa fa-at"></i></div>
 								</div>
-								<input name="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" autofocus="" type="email">
+								<input name="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" autofocus="" type="text">
 							</div>
 						</div>
 					</div>
@@ -58,7 +62,7 @@
 					<div class="col-md-2"></div>
 					<div class="col-md-8">
 						<div class="input-group mb-3" id="container-password">
-							<label class="sr-only" for="password">Contraseña</label>
+							<label class="sr-only"  for="password"> Contraseña</label>
 							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
 								<div class="input-group-prepend">
 									<div class="input-group-text" style="width: 48px"><i class="fa fa-key"></i></div>
@@ -82,7 +86,7 @@
 				<div class="row" style="padding-top: 1rem">
 					<div class="col-md-2"></div>
 					<div class="col-md-8" id="container-login">
-						<button class="btn btn-success" id="login"><i class="fa fa-sign-in"></i> Entrar</button>
+						<button class="btn btn-success" id="login" onclick="getLogin()"><i class="fa fa-sign-in"></i> Entrar</button>
 						<button type="button" class="btn btn-link" onclick="passwordOlvidada()" id="boton-olvidar">Olvidé mi contraseña</button>
 					</div>
 				</div>
@@ -92,9 +96,9 @@
 	<footer style="position:absolute;bottom:0.5rem;right:1rem;">Plataforma desarrollada por Óscar Blánquez 2018 © Todos los derechos reservados.</footer>
 
 	<script>
-		
+	
 		function passwordOlvidada(){
-			
+		
 			var header = document.getElementById("header");
 			header.innerHTML = `<h2 id="header"><i class="fa fa-envelope"></i> Recuperar contraseña</h2>` ;
 

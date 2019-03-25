@@ -28,7 +28,7 @@ describe( "Test 1 (probar a añadir zonas)", () => {
 	// que cualquier otra cosa
 	before(  ( hecho ) => {
 
-		laLogica = new Logica("../datos/Zonas.bd", ( err ) => {
+		laLogica = new Logica("../datos/database.db", ( err ) => {
 
 				assert.equal( null, err, `conexión a BD fallada: ${err}`) ;
 
@@ -53,37 +53,34 @@ describe( "Test 1 (probar a añadir zonas)", () => {
 	// ....................................................
 	//
 	// ....................................................
-	it( "inserto zona marjal", ( hecho ) => {
+	it( "inserto zona miramar", ( hecho ) => {
 
-		var datos = {
-			nombre: "marjal",
-			descripcion: "marjal al lado del Grau de Gandia"
-		}
+			var nombreZona =  "miramar" ;
+			var descripcion = "zona turística de playa" ;
 
-		laLogica.nuevaZona( datos, (err) =>  {
+		laLogica.nuevaZona( nombreZona, descripcion, (err) =>  {
 
 			assert.ok( ! err, `Existe un error: ${err}` ) ;
 			
-			hecho() ;
 		})
-		
+		hecho() ;
 	}) // it
 
 	// ....................................................
 	//
 	// ....................................................
-	it( "inserto un vertice para marjal", ( hecho ) => {
+	it( "inserto un vertice para miramar", ( hecho ) => {
 
-		var vertice = {
-			longitud: 0, // X
-			latitud:  1// Y
-		}
+			var longitud = 5 // X
+			var latitud =  6// Y
 
-		laLogica.nuevoVerticeParaZona( "marjal", vertice, function( err ) {
-			assert.ok( ! err, `Existe un error: ` )
+		laLogica.nuevoVerticeParaZona( "miramar", longitud, latitud, ( err ) => {
 
+			//assert.ok( ! err, `Existe un error:` ) ;
 			hecho()
 		})
+
+
 		
 	}) // it
 
@@ -148,16 +145,20 @@ describe( "Test 1 (probar a añadir zonas)", () => {
 			// compruebo que devuelve un resultado
 			assert.ok(res) ;
 
-			console.log(`Vértices: ${res}`) ;
+			var longitud = res[0].longitud ;
+
+			var latitud = res[0].latitud ;
+
+			console.log(`Vértices: ${longitud}, ${latitud}`) ;
 
 			// compruebo que ese resultado que devuelve son los vértices
-			assert.equal( res[0], 0 ) ;
-			assert.equal( res[1], 1) ;
-
-		});
-
-		hecho();
+			assert.equal( longitud, 1 ) ;
+			assert.equal( latitud, 0 ) ;
 		
+		});
+		
+		hecho();
+
 		
 	}); // it
 
